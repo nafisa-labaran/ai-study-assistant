@@ -2,22 +2,27 @@
 
 An AI-powered study assistant designed to help university students understand and revise academic materials.
 
-## Initial Features
+## Project
 
-- Ask and explain academic questions
-- Summarise study materials
-- Generate practice questions
+The application will initially provide:
 
-## Documentation
+* Academic question explanations
+* Study material summarisation
+* Practice question generation
 
-- [Product Brief](docs/product-brief.md)
-- [Risk Register](docs/risk-register.md)
-- [System Diagram](docs/system-diagram.png)
+Additional AI capabilities will be developed in later stages.
 
-## AI Provider
+## Assignments
 
-The initial AI provider is OpenAI, integrated through the Vercel AI SDK.
+* [Week 1 — Product Planning & Architecture](assignments/week-1/)
 
-## Live Demo
+## Technology
 
-Coming soon.
+* Next.js
+* TypeScript
+* Vercel AI SDK
+* OpenAI
+
+## Status
+
+Week 1 planning and architecture completed. Application development will begin in subsequent stages.
