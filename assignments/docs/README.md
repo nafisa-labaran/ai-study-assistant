@@ -20,4 +20,4 @@ The initial AI provider is OpenAI, integrated through the Vercel AI SDK.
 
 ## Live Demo
 
-Coming soon.
+[Live vercel link](https://ai-study-assistant-jut2tsz8e-nafisa-s-projects1.vercel.app/)
