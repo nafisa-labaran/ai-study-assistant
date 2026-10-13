@@ -1,28 +1,31 @@
 # AI Study Assistant
 
-An AI-powered study assistant designed to help university students understand and revise academic materials.
+An AI-powered study assistant designed to help university students understand concepts, revise academic materials, and practise what they learn.
 
-## Project
+## Features
 
-The application will initially provide:
+- **Academic Question Explanations:** Ask questions and receive clear, student-friendly explanations.
+- **Study Support:** Designed to support future study material summarisation and practice question generation.
+- **Streaming Chat:** AI responses appear progressively as they are generated.
+- **Chat Controls:** Stop a response, retry a failed answer, or regenerate an answer.
+- **Accessible Status Updates:** Provides status messages to help users follow the conversation.
+- **Error Handling:** Displays feedback when a request fails.
 
-* Academic question explanations
-* Study material summarisation
-* Practice question generation
+## Technology Stack
 
-Additional AI capabilities will be developed in later stages.
+- Next.js
+- TypeScript
+- Vercel AI SDK
+- Google Gemini
 
-## Assignments
+## Project Documentation
 
-* [Week 1 — Product Planning & Architecture](assignments/week-1/)
+- [Week 1 — Product Planning and Architecture](assignments/docs/README.md)
 
-## Technology
+## Live Demo
 
-* Next.js
-* TypeScript
-* Vercel AI SDK
-* OpenAI
+[Try AI Study Assistant](https://ai-study-assistant-9mi4bc385-nafisa-s-projects1.vercel.app/)
 
-## Status
+## Project Status
 
-Week 1 planning and architecture completed. Application development will begin in subsequent stages.
+The initial AI chat interface is implemented and deployed. Development will continue in subsequent stages as additional study features are introduced.
