@@ -24,7 +24,7 @@ An AI-powered study assistant designed to help university students understand co
 
 ## Live Demo
 
-[Try AI Study Assistant](https://ai-study-assistant-9mi4bc385-nafisa-s-projects1.vercel.app/)
+[Try AI Study Assistant](https://ai-study-assistant-6gf2njyfl-nafisa-s-projects1.vercel.app/)
 
 ## Project Status
 

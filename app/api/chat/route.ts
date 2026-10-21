@@ -1,9 +1,4 @@
-
-import {
-  convertToModelMessages,
-  streamText,
-  type UIMessage,
-} from "ai";
+import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { google } from "@ai-sdk/google";
 
 export const maxDuration = 30;
@@ -41,7 +36,7 @@ export async function POST(request: Request) {
     }
 
     const result = streamText({
-      model: google("gemini-3.6-flash"),
+      model: google("gemini-3.5-flash-lite"),
       system:
         "You are AI Study Assistant, a friendly tutor for university students. Explain concepts clearly, use examples when helpful, and support learning rather than simply giving unexplained answers.",
       messages: await convertToModelMessages(messages),

@@ -1,4 +1,5 @@
 
+import Link from "next/link";
 import ChatInterface from "./components/chat-interface";
 
 export default function Home() {
@@ -10,6 +11,13 @@ export default function Home() {
           Ask questions, summarise study materials, and generate practice
           questions.
         </p>
+
+        <Link
+          href="/study-guide"
+          className="mt-4 inline-flex rounded-lg bg-gray-900 px-4 py-2 font-medium text-white transition-colors hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+        >
+          Generate a Study Guide →
+        </Link>
       </header>
 
       <ChatInterface />
