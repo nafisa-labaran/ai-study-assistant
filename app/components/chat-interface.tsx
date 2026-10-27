@@ -1,18 +1,41 @@
+
 "use client";
 
 import { useState } from "react";
 import { useChat } from "@ai-sdk/react";
+import {
+  lastAssistantMessageIsCompleteWithApprovalResponses,
+  type UIMessage,
+} from "ai";
+import type {
+  RevisionTask,
+  CreatedRevisionTask,
+} from "@/types/revision-task";
 
-/**
- * Design tokens. Every surface sets its own text colour from these, so the
- * component no longer inherits the page's foreground colour (the usual cause
- * of pale text on a light background). Change the values here to retheme.
- *
- * Contrast on --ink (#14161b):
- *   --text   #ecebe6  ~15:1
- *   --muted  #a3a7b0  ~7.5:1
- *   --accent #e3b866  ~10:1
- */
+type RevisionTaskResult =
+  | {
+      success: true;
+      message: string;
+      task: CreatedRevisionTask;
+    }
+  | {
+      success: false;
+      message: string;
+    };
+
+type RevisionTaskTools = {
+  createRevisionTask: {
+    input: RevisionTask;
+    output: RevisionTaskResult;
+  };
+};
+
+type StudyAssistantMessage = UIMessage<
+  unknown,
+  never,
+  RevisionTaskTools
+>;
+
 const tokens = {
   "--ink": "#14161b",
   "--user": "#262a35",
@@ -29,9 +52,14 @@ const tokens = {
 const focusRing =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]";
 
-const ghostButton = `rounded-full border border-[var(--line)] px-3 py-1.5 text-sm text-[var(--muted)] transition-colors hover:border-[var(--muted)] hover:text-[var(--text)] ${focusRing}`;
+const ghostButton =
+  `rounded-full border border-[var(--line)] px-3 py-1.5 text-sm text-[var(--muted)] transition-colors hover:border-[var(--muted)] hover:text-[var(--text)] ${focusRing}`;
 
-const feedbackButton = `${ghostButton} aria-pressed:border-[var(--accent)] aria-pressed:text-[var(--accent)]`;
+const feedbackButton =
+  `${ghostButton} aria-pressed:border-[var(--accent)] aria-pressed:text-[var(--accent)]`;
+
+const primaryButton =
+  `rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-medium text-[var(--accent-ink)] disabled:opacity-50 ${focusRing}`;
 
 export default function ChatInterface() {
   const [input, setInput] = useState("");
@@ -45,7 +73,11 @@ export default function ChatInterface() {
     regenerate,
     error,
     clearError,
-  } = useChat();
+    addToolApprovalResponse,
+  } = useChat<StudyAssistantMessage>({
+    sendAutomaticallyWhen:
+      lastAssistantMessageIsCompleteWithApprovalResponses,
+  });
 
   const isBusy = status === "submitted" || status === "streaming";
 
@@ -80,7 +112,7 @@ export default function ChatInterface() {
       >
         {messages.length === 0 && (
           <p className="my-auto text-center text-[var(--muted)]">
-            What are you studying? Ask a question to get started.
+            What are you studying? Ask a question or ask me to plan a revision task.
           </p>
         )}
 
@@ -107,59 +139,232 @@ export default function ChatInterface() {
           return (
             <article
               key={message.id}
-              className="max-w-[92%] self-start border-l-2 border-[var(--line)] pl-4 text-[var(--text)]"
+              className="flex max-w-[95%] flex-col items-start gap-4 self-start border-l-2 border-[var(--line)] pl-4 text-[var(--text)]"
             >
-              <p className="mb-2 flex items-center gap-2 text-sm font-medium text-[var(--muted)]">
-                <span
-                  aria-hidden="true"
-                  className="h-2 w-2 rounded-full bg-[var(--accent)]"
-                />
-                AI Study Assistant
-              </p>
+              <div className="w-full">
+                <p className="mb-2 flex items-center gap-2 text-sm font-medium text-[var(--muted)]">
+                  <span
+                    aria-hidden="true"
+                    className="h-2 w-2 rounded-full bg-[var(--accent)]"
+                  />
+                  AI Study Assistant
+                </p>
 
-              <p className="whitespace-pre-wrap break-words font-serif text-[1.0625rem] leading-8 text-[var(--text)]">
-                {text}
-              </p>
+                {text && (
+                  <>
+                    <p className="whitespace-pre-wrap break-words font-serif text-[1.0625rem] leading-8 text-[var(--text)]">
+                      {text}
+                    </p>
 
-              {text && (
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={() => void copyMessage(text)}
-                    className={ghostButton}
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => void copyMessage(text)}
+                        className={ghostButton}
+                      >
+                        Copy
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setFeedback((previous) => ({
+                            ...previous,
+                            [message.id]: "Helpful",
+                          }))
+                        }
+                        aria-pressed={feedback[message.id] === "Helpful"}
+                        className={feedbackButton}
+                      >
+                        Helpful
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setFeedback((previous) => ({
+                            ...previous,
+                            [message.id]: "Not helpful",
+                          }))
+                        }
+                        aria-pressed={feedback[message.id] === "Not helpful"}
+                        className={feedbackButton}
+                      >
+                        Not helpful
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {message.parts.map((part, index) => {
+                if (part.type !== "tool-createRevisionTask") {
+                  return null;
+                }
+
+                const toolPart = part;
+
+                if (
+                  toolPart.state === "input-streaming" ||
+                  toolPart.state === "input-available"
+                ) {
+                  return (
+                    <div
+                      key={toolPart.toolCallId}
+                      className="w-full rounded-xl border border-[var(--line)] p-4"
+                    >
+                      <p className="text-sm text-[var(--muted)]">
+                        Preparing your revision task…
+                      </p>
+                    </div>
+                  );
+                }
+
+                if (toolPart.state === "approval-requested") {
+                  const task = toolPart.input;
+
+                  return (
+                    <div
+                      key={toolPart.toolCallId}
+                      className="w-full rounded-xl border border-[var(--accent)]/60 bg-[var(--user)] p-4"
+                    >
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[var(--accent)]">
+                        Review before creating
+                      </p>
+
+                      <h3 className="mt-3 text-lg font-semibold">
+                        {task.title}
+                      </h3>
+
+                      <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-[var(--text)]">
+                        {task.description}
+                      </p>
+
+                      <p className="mt-3 text-sm text-[var(--muted)]">
+                        Due date: {task.dueDate}
+                      </p>
+
+                      <p className="mt-3 text-sm text-[var(--muted)]">
+                        This task will only be created if you approve it.
+                      </p>
+
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          disabled={isBusy}
+                          onClick={() =>
+                            void addToolApprovalResponse({
+                              id: toolPart.approval.id,
+                              approved: true,
+                            })
+                          }
+                          className={primaryButton}
+                        >
+                          Approve task
+                        </button>
+
+                        <button
+                          type="button"
+                          disabled={isBusy}
+                          onClick={() =>
+                            void addToolApprovalResponse({
+                              id: toolPart.approval.id,
+                              approved: false,
+                              reason: "The student rejected the proposed task.",
+                            })
+                          }
+                          className={ghostButton}
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (toolPart.state === "approval-responded") {
+                  return (
+                    <p
+                      key={toolPart.toolCallId}
+                      className="text-sm text-[var(--muted)]"
+                    >
+                      {toolPart.approval.approved
+                        ? "Approval received. Processing your task…"
+                        : "Task proposal rejected."}
+                    </p>
+                  );
+                }
+
+                if (toolPart.state === "output-available") {
+                  const result = toolPart.output;
+
+                  return (
+                    <div
+                      key={toolPart.toolCallId}
+                      role="status"
+                      className="w-full rounded-xl border border-[var(--line)] p-4"
+                    >
+                      <p
+                        className={
+                          result.success
+                            ? "font-medium text-[var(--accent)]"
+                            : "font-medium text-[var(--danger-text)]"
+                        }
+                      >
+                        {result.success
+                          ? "Revision task created"
+                          : "Task could not be created"}
+                      </p>
+
+                      <p className="mt-2 text-sm text-[var(--text)]">
+                        {result.message}
+                      </p>
+
+                      {result.success && (
+                        <p className="mt-2 text-sm text-[var(--muted)]">
+                          Due date: {result.task.dueDate}
+                        </p>
+                      )}
+
+                      <p className="mt-3 text-xs text-[var(--muted)]">
+                        Demo note: this result is not yet saved to permanent storage.
+                      </p>
+                    </div>
+                  );
+                }
+
+                if (toolPart.state === "output-denied") {
+                  return (
+                    <p
+                      key={toolPart.toolCallId}
+                      className="text-sm text-[var(--muted)]"
+                    >
+                      The task was not created because approval was declined.
+                    </p>
+                  );
+                }
+
+                if (toolPart.state === "output-error") {
+                  return (
+                    <div
+                      key={toolPart.toolCallId}
+                      role="alert"
+                      className="w-full rounded-xl border border-[var(--danger-line)] bg-[var(--danger-bg)] p-4 text-sm text-[var(--danger-text)]"
+                    >
+                      Task creation failed. Please try again.
+                    </div>
+                  );
+                }
+
+                return (
+                  <p
+                    key={`${message.id}-tool-${index}`}
+                    className="text-sm text-[var(--muted)]"
                   >
-                    Copy
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setFeedback((previous) => ({
-                        ...previous,
-                        [message.id]: "Helpful",
-                      }))
-                    }
-                    aria-pressed={feedback[message.id] === "Helpful"}
-                    className={feedbackButton}
-                  >
-                    Helpful
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setFeedback((previous) => ({
-                        ...previous,
-                        [message.id]: "Not helpful",
-                      }))
-                    }
-                    aria-pressed={feedback[message.id] === "Not helpful"}
-                    className={feedbackButton}
-                  >
-                    Not helpful
-                  </button>
-                </div>
-              )}
+                    Processing task…
+                  </p>
+                );
+              })}
             </article>
           );
         })}
@@ -177,8 +382,12 @@ export default function ChatInterface() {
         )}
       </div>
 
-      {/* Screen-reader announcements only; the visible indicators are above. */}
-      <p role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+      <p
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+      >
         {status === "submitted"
           ? "Your question has been sent."
           : status === "streaming"
@@ -237,15 +446,16 @@ export default function ChatInterface() {
         )}
       </form>
 
-      {!isBusy && messages.some((message) => message.role === "assistant") && (
-        <button
-          type="button"
-          onClick={() => void regenerate()}
-          className={`self-start ${ghostButton}`}
-        >
-          Regenerate last answer
-        </button>
-      )}
+      {!isBusy &&
+        messages.some((message) => message.role === "assistant") && (
+          <button
+            type="button"
+            onClick={() => void regenerate()}
+            className={`self-start ${ghostButton}`}
+          >
+            Regenerate last answer
+          </button>
+        )}
     </section>
   );
 }
