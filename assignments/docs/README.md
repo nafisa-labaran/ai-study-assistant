@@ -27,7 +27,7 @@ Google Gemini is integrated through the Vercel AI SDK. API credentials are confi
 
 ## Live Demo
 
-[Try AI Study Assistant](https://ai-study-assistant-6gf2njyfl-nafisa-s-projects1.vercel.app/)
+[Try AI Study Assistant](https://ai-study-assistant-sigma-amber.vercel.app/)
 
 ## Project Status
 
