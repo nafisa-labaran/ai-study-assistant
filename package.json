@@ -13,6 +13,7 @@
     "@ai-sdk/google": "^4.0.94",
     "@ai-sdk/openai": "^4.0.86",
     "@ai-sdk/react": "^4.0.141",
+    "@supabase/supabase-js": "^2.119.0",
     "ai": "^7.0.130",
     "next": "16.4.0",
     "react": "19.3.0",

@@ -56,7 +56,7 @@ describe("StudyGuidePage", () => {
     expect(screen.getByLabelText("What would you like to study?")).toBeTruthy();
 
     expect(
-      screen.getByRole("button", { name: "Generate Study Guide" }),
+      screen.getByRole("button", { name: "Generate" }),
     ).toBeTruthy();
   });
 
@@ -64,7 +64,7 @@ describe("StudyGuidePage", () => {
     render(<StudyGuidePage />);
 
     fireEvent.click(
-      screen.getByRole("button", { name: "Generate Study Guide" }),
+      screen.getByRole("button", { name: "Generate" }),
     );
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
@@ -84,7 +84,7 @@ describe("StudyGuidePage", () => {
     });
 
     fireEvent.click(
-      screen.getByRole("button", { name: "Generate Study Guide" }),
+      screen.getByRole("button", { name: "Generate" }),
     );
 
     expect(
@@ -141,11 +141,11 @@ describe("StudyGuidePage", () => {
     });
 
     fireEvent.click(
-      screen.getByRole("button", { name: "Generate Study Guide" }),
+      screen.getByRole("button", { name: "Generate" }),
     );
 
     expect(
-      screen.getByRole("button", { name: "Generating..." }),
+      screen.getByRole("button", { name: "Generating…" })
     ).toBeDisabled();
 
     expect(screen.getByRole("status")).toHaveTextContent(
@@ -165,7 +165,7 @@ describe("StudyGuidePage", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole("button", { name: "Generate Study Guide" }),
+        screen.getByRole("button", { name: "Generate" }),
       ).toBeEnabled();
     });
   });
@@ -183,7 +183,7 @@ describe("StudyGuidePage", () => {
     });
 
     fireEvent.click(
-      screen.getByRole("button", { name: "Generate Study Guide" }),
+      screen.getByRole("button", { name: "Generate" }),
     );
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
@@ -210,7 +210,7 @@ describe("StudyGuidePage", () => {
     });
 
     fireEvent.click(
-      screen.getByRole("button", { name: "Generate Study Guide" }),
+      screen.getByRole("button", { name: "Generate" }),
     );
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
@@ -239,7 +239,7 @@ describe("StudyGuidePage", () => {
     });
 
     fireEvent.click(
-      screen.getByRole("button", { name: "Generate Study Guide" }),
+      screen.getByRole("button", { name: "Generate" }),
     );
 
     expect(
@@ -264,7 +264,7 @@ describe("StudyGuidePage", () => {
     });
 
     fireEvent.click(
-      screen.getByRole("button", { name: "Generate Study Guide" }),
+      screen.getByRole("button", { name: "Generate" }),
     );
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
@@ -272,7 +272,7 @@ describe("StudyGuidePage", () => {
     );
 
     fireEvent.click(
-      screen.getByRole("button", { name: "Generate Study Guide" }),
+      screen.getByRole("button", { name: "Generate" }),
     );
 
     expect(

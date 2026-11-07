@@ -123,7 +123,7 @@ export default function StudyGuidePage() {
           <button
             type="button"
             onClick={() => void generateGuide()}
-            disabled={loading || !topic.trim()}
+            disabled={loading}
             className={`rounded-xl bg-[var(--accent)] px-5 py-3 font-medium text-[var(--accent-ink)] transition-opacity disabled:opacity-40 ${focusRing}`}
           >
             {loading ? "Generating…" : "Generate"}
