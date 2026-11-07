@@ -70,3 +70,54 @@ The current prototype does not include student authentication or per-user databa
 - Zod
 - Supabase
 - Tailwind CSS
+
+
+## Using Study Tools
+
+The Study Tools feature allows students to search available study materials, save generated study guides, and create revision tasks using natural language.
+
+### Accessing Study Tools
+
+1. Open the AI Study Assistant application.
+2. Select **Study Tools** from the main navigation.
+3. Enter a request in the message box and submit it.
+
+### Examples of Requests
+
+**Search for study materials**
+- "Find materials on Requirements Engineering."
+- "Search for study materials about software testing."
+
+**Save a study guide**
+- "Save my study guide on Software Architecture."
+- Review the proposed title and content before approving.
+
+**Create a revision task**
+- "Create a high-priority revision task for Requirements Engineering."
+- Review the task title, description, due date, and priority before approving.
+
+### Understanding Tool Approvals
+
+Not every action requires approval.
+
+| Action | Approval required? |
+|---|---|
+| Search study materials | No |
+| Save a study guide | Yes |
+| Create a revision task | Yes |
+
+When an action requires approval:
+
+1. The assistant presents a preview of the proposed action.
+2. Review the details.
+3. Select **Approve** to execute the action or **Reject** to cancel it.
+4. The application displays the outcome.
+
+Approval requests expire after five minutes and cannot be reused.
+
+### Important Notes
+
+- Study Tools searches materials already available in the application's database.
+- Search results depend on the materials stored in the database.
+- Saving study guides and creating tasks require explicit approval.
+- This is a prototype and does not yet provide individual student accounts or automatic rollback.

@@ -12,12 +12,21 @@ export default function Home() {
           questions.
         </p>
 
-        <Link
-          href="/study-guide"
-          className="mt-4 inline-flex rounded-lg bg-gray-900 px-4 py-2 font-medium text-white transition-colors hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
-        >
-          Generate a Study Guide →
-        </Link>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Link
+            href="/study-guide"
+            className="inline-flex rounded-lg bg-gray-900 px-4 py-2 font-medium text-white transition-colors hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+          >
+            Generate a Study Guide →
+          </Link>
+
+          <Link
+            href="/study-tools"
+            className="inline-flex rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-900 transition-colors hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+          >
+            Study Tools →
+          </Link>
+        </div>
       </header>
 
       <ChatInterface />
