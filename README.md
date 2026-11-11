@@ -6,6 +6,7 @@ An AI-powered study assistant designed to help university students understand co
 
 - **Academic Question Explanations:** Ask questions and receive clear, student-friendly explanations.
 - **Study Support:** Designed to support future study material summarisation and practice question generation.
+- **Ask Your Materials:** Select stored study materials, ask a question, and receive an answer with citations and supporting excerpts from those materials.
 - **Streaming Chat:** AI responses appear progressively as they are generated.
 - **Chat Controls:** Stop a response, retry a failed answer, or regenerate an answer.
 - **Accessible Status Updates:** Provides status messages to help users follow the conversation.
@@ -21,6 +22,7 @@ An AI-powered study assistant designed to help university students understand co
 ## Project Documentation
 
 - [Week 1 — Product Planning and Architecture](assignments/docs/README.md)
+- [Week 6 — Retrieval-Augmented Frontend AI Experiences (RAG)](assignments/week-6/README.md)
 
 ## Live Demo
 

@@ -26,6 +26,13 @@ export default function Home() {
           >
             Study Tools →
           </Link>
+
+          <Link
+            href="/ask-materials"
+            className="inline-flex rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-900 transition-colors hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+          >
+            Ask Your Materials →
+          </Link>
         </div>
       </header>
 

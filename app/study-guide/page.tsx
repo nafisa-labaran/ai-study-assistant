@@ -20,7 +20,9 @@ const tokens = {
 const focusRing =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]";
 
-const ghostButton = `rounded-full border border-[var(--line)] px-3 py-1.5 text-sm text-[var(--muted)] transition-colors hover:border-[var(--muted)] hover:text-[var(--text)] ${focusRing}`;
+// Link shown in the light page header, styled like the links on the home page.
+const pageLink =
+  "inline-flex rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-900 transition-colors hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900";
 
 export default function StudyGuidePage() {
   const [topic, setTopic] = useState("");
@@ -82,22 +84,25 @@ export default function StudyGuidePage() {
   }
 
   return (
-    <main
-      style={tokens}
-      className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 bg-[var(--ink)] p-4 text-[var(--text)] sm:p-6"
-    >
-      <Link href="/" className={`self-start ${ghostButton}`}>
-        ← Back to AI Assistant
-      </Link>
-
-      <header>
-        <h1 className="text-3xl font-semibold">AI Study Guide Generator</h1>
-        <p className="mt-2 text-[var(--muted)]">
+    <main className="min-h-screen bg-white px-4 py-10 text-gray-900 sm:px-6">
+      <header className="mx-auto mb-8 max-w-3xl">
+        <h1 className="text-3xl font-bold">AI Study Guide Generator</h1>
+        <p className="mt-2 text-gray-600">
           Enter an academic topic to generate a summary, key concepts, and
           practice questions.
         </p>
+
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Link href="/" className={pageLink}>
+            ← Back to AI Assistant
+          </Link>
+        </div>
       </header>
 
+      <div
+        style={tokens}
+        className="mx-auto flex w-full max-w-3xl flex-col gap-6 rounded-2xl bg-[var(--ink)] p-4 text-[var(--text)] sm:p-6"
+      >
       <section className="flex flex-col gap-4">
         <label htmlFor="study-topic" className="font-medium">
           What would you like to study?
@@ -212,6 +217,7 @@ export default function StudyGuidePage() {
           </section>
         </article>
       )}
+      </div>
     </main>
   );
 }

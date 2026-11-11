@@ -1,7 +1,32 @@
 
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useState } from "react";
+
+const tokens = {
+  "--ink": "#14161b",
+  "--user": "#262a35",
+  "--line": "#2e323d",
+  "--text": "#ecebe6",
+  "--muted": "#a3a7b0",
+  "--accent": "#e3b866",
+  "--accent-ink": "#14161b",
+  "--danger-bg": "#2b1a1c",
+  "--danger-line": "#5a2c2f",
+  "--danger-text": "#ffb3a7",
+} as React.CSSProperties;
+
+const focusRing =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]";
+
+const ghostButton = `rounded-full border border-[var(--line)] px-3 py-1.5 text-sm text-[var(--muted)] transition-colors hover:border-[var(--muted)] hover:text-[var(--text)] ${focusRing}`;
+
+const primaryButton = `rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-medium text-[var(--accent-ink)] disabled:opacity-50 ${focusRing}`;
+
+// Link shown in the light page header, styled like the links on the home page.
+const pageLink =
+  "inline-flex rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-900 transition-colors hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900";
 
 type StudyMaterial = {
   id: string;
@@ -210,28 +235,33 @@ export default function StudyToolsPage() {
   }
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-4xl px-6 py-12">
-      <div className="mb-8">
-        <p className="mb-2 text-sm font-medium text-blue-600">
-          AI Study Assistant
-        </p>
-
-        <h1 className="text-3xl font-bold tracking-tight">
-          Study Tools
-        </h1>
+    <main className="min-h-screen bg-white px-4 py-10 text-gray-900 sm:px-6">
+      <header className="mx-auto mb-8 max-w-3xl">
+        <h1 className="text-3xl font-bold">Study Tools</h1>
 
         <p className="mt-2 text-gray-600">
           Find study materials, save study guides, or create revision tasks.
         </p>
-      </div>
+
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Link href="/" className={pageLink}>
+            ← Back to AI Assistant
+          </Link>
+        </div>
+      </header>
+
+      <div
+        style={tokens}
+        className="mx-auto flex w-full max-w-3xl flex-col gap-6 rounded-2xl bg-[var(--ink)] p-4 text-[var(--text)] sm:p-6"
+      >
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 rounded-xl border border-gray-200 p-5"
+        className="flex flex-col gap-4"
       >
         <label
           htmlFor="study-request"
-          className="block text-sm font-semibold"
+          className="font-medium"
         >
           What would you like to do?
         </label>
@@ -243,50 +273,53 @@ export default function StudyToolsPage() {
           placeholder="Example: Search for Requirements Engineering materials."
           maxLength={1000}
           rows={4}
-          className="w-full rounded-lg border border-gray-300 p-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          className={`w-full rounded-xl border border-[var(--line)] bg-[var(--user)] px-4 py-3 text-[var(--text)] placeholder:text-[var(--muted)] ${focusRing}`}
         />
 
         <div className="flex items-center justify-between gap-4">
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-[var(--muted)]">
             {message.length}/1000 characters
           </span>
 
           <button
             type="submit"
             disabled={loading}
-            className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className={`rounded-xl bg-[var(--accent)] px-5 py-3 font-medium text-[var(--accent-ink)] transition-opacity disabled:opacity-40 ${focusRing}`}
           >
             {loading ? "Processing..." : "Send request"}
           </button>
         </div>
 
         {error && (
-          <p role="alert" className="text-sm text-red-600">
+          <p
+            role="alert"
+            className="rounded-xl border border-[var(--danger-line)] bg-[var(--danger-bg)] p-4 text-sm text-[var(--danger-text)]"
+          >
             {error}
           </p>
         )}
       </form>
 
       {responseMessage && (
-        <section className="mt-8">
+        <section>
           <h2 className="mb-2 text-lg font-semibold">
             Assistant response
           </h2>
 
-          <p className="rounded-lg bg-gray-50 p-4 text-sm leading-6 text-gray-700">
+          <p className="whitespace-pre-wrap rounded-xl bg-[var(--user)] p-4 leading-7 text-[var(--text)]">
             {responseMessage}
           </p>
         </section>
       )}
 
       {proposals.length > 0 && (
-        <section className="mt-8 space-y-4">
+        <section className="flex flex-col gap-4">
           <div>
             <h2 className="text-lg font-semibold">
               Tool results and proposed actions
             </h2>
 
-            <p className="mt-1 text-sm text-gray-600">
+            <p className="mt-1 text-sm text-[var(--muted)]">
               Review search results or proposed actions below.
             </p>
           </div>
@@ -301,24 +334,24 @@ export default function StudyToolsPage() {
             return (
               <article
                 key={`${proposal.toolName}-${index}`}
-                className="rounded-xl border border-gray-200 p-5"
+                className="rounded-xl border border-[var(--line)] p-4"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h3 className="font-semibold">
                     {getActionTitle(proposal.toolName)}
                   </h3>
 
-                  <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
+                  <span className="rounded-full border border-[var(--line)] px-3 py-1 text-xs font-medium text-[var(--muted)]">
                     {isReadOnly ? "Read-only search" : status.state}
                   </span>
                 </div>
 
                 <div className="mt-4">
-                  <p className="mb-2 text-sm font-medium text-gray-700">
+                  <p className="mb-2 text-sm font-medium text-[var(--muted)]">
                     {isReadOnly ? "Search query" : "Proposed details"}
                   </p>
 
-                  <pre className="overflow-x-auto rounded-lg bg-gray-50 p-4 text-xs leading-6 text-gray-700">
+                  <pre className="overflow-x-auto rounded-lg bg-[var(--user)] p-4 text-xs leading-6 text-[var(--text)]">
                     {JSON.stringify(proposal.input ?? {}, null, 2)}
                   </pre>
                 </div>
@@ -330,13 +363,13 @@ export default function StudyToolsPage() {
                     </h4>
 
                     {proposal.result?.error ? (
-                      <p className="text-sm text-red-600">
+                      <p className="text-sm text-[var(--danger-text)]">
                         {proposal.result.error}
                       </p>
                     ) : proposal.result?.materials &&
                       proposal.result.materials.length > 0 ? (
                       <>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-[var(--muted)]">
                           Found {proposal.result.count ?? 0} matching
                           material(s).
                         </p>
@@ -344,26 +377,26 @@ export default function StudyToolsPage() {
                         {proposal.result.materials.map((material) => (
                           <div
                             key={material.id}
-                            className="rounded-lg border border-gray-200 p-4"
+                            className="rounded-lg border border-[var(--line)] p-4"
                           >
-                            <h5 className="font-semibold text-gray-900">
+                            <h5 className="font-semibold">
                               {material.title}
                             </h5>
 
                             {material.subject && (
-                              <p className="mt-1 text-xs font-medium text-blue-600">
+                              <p className="mt-1 text-xs font-medium text-[var(--accent)]">
                                 {material.subject}
                               </p>
                             )}
 
-                            <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-gray-600">
+                            <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-[var(--muted)]">
                               {material.content}
                             </p>
                           </div>
                         ))}
                       </>
                     ) : (
-                      <p className="rounded-lg bg-gray-50 p-4 text-sm text-gray-600">
+                      <p className="rounded-lg bg-[var(--user)] p-4 text-sm text-[var(--muted)]">
                         No matching study materials were found.
                       </p>
                     )}
@@ -373,7 +406,7 @@ export default function StudyToolsPage() {
                     {status.message && (
                       <p
                         role="status"
-                        className="mt-4 text-sm text-gray-700"
+                        className="mt-4 text-sm text-[var(--text)]"
                       >
                         {status.message}
                       </p>
@@ -384,7 +417,7 @@ export default function StudyToolsPage() {
                         <button
                           type="button"
                           onClick={() => handleApprove(index)}
-                          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                          className={primaryButton}
                         >
                           Approve
                         </button>
@@ -392,7 +425,7 @@ export default function StudyToolsPage() {
                         <button
                           type="button"
                           onClick={() => handleReject(index)}
-                          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50"
+                          className={ghostButton}
                         >
                           Reject
                         </button>
@@ -400,7 +433,7 @@ export default function StudyToolsPage() {
                     )}
 
                     {status.state === "approving" && (
-                      <p className="mt-4 text-sm text-blue-600">
+                      <p className="mt-4 text-sm text-[var(--accent)]">
                         Processing your approval...
                       </p>
                     )}
@@ -410,7 +443,7 @@ export default function StudyToolsPage() {
             );
           })}
 
-          <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
+          <p className="rounded-xl border border-[var(--line)] p-3 text-sm text-[var(--muted)]">
             Searching study materials is read-only. Saving study guides
             and creating revision tasks require your approval.
           </p>
@@ -418,13 +451,11 @@ export default function StudyToolsPage() {
       )}
 
       {!loading && responseMessage && proposals.length === 0 && (
-        <p className="mt-6 text-sm text-gray-500">
+        <p className="text-sm text-[var(--muted)]">
           No tool action was proposed for this request.
         </p>
       )}
+      </div>
     </main>
   );
 }
-
-
-
